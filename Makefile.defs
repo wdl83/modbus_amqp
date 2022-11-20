@@ -1,0 +1,45 @@
+CC=gcc
+
+ifndef OBJ_DIR
+$(error please define OBJ_DIR)
+endif
+
+ifndef DST_DIR
+$(error please define DST_DIR)
+endif
+
+CXXFLAGS = \
+	-DENABLE_TRACE \
+	-I ${OBJ_DIR}/AMQP-CPP/include \
+	-I ensure \
+	-I modbus_tools \
+	-Wall \
+	-Wextra \
+	-Wno-parentheses \
+	-Wshadow \
+	-Wunreachable-code \
+	-g \
+	-std=c++14
+
+LDFLAGS = \
+	-L ${OBJ_DIR}/AMQP-CPP/lib \
+	-lamqpcpp \
+	-lpthread \
+	-lstdc++
+
+ifdef RELEASE
+
+CXXFLAGS += \
+	-O2 \
+	-flto
+
+else
+
+CXXFLAGS += \
+	-O0 \
+	-fsanitize=address
+
+LDFLAGS += \
+	-fsanitize=address
+
+endif
